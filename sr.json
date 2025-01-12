@@ -1,0 +1,431 @@
+{
+  "log": {
+    "disabled": false,
+    "level": "info",
+    "timestamp": true
+  },
+  "experimental": {
+    "clash_api": {
+      "external_controller": "127.0.0.1:9090",
+      "external_ui": "ui",
+      "external_ui_download_url": "",
+      "external_ui_download_detour": "",
+      "secret": "",
+      "default_mode": "Rule"
+       },
+      "cache_file": {
+            "enabled": true,
+            "path": "cache.db",
+            "store_fakeip": true
+        }
+    },
+    "dns": {
+        "servers": [
+            {
+                "tag": "proxydns",
+                "address": "tls://8.8.8.8/dns-query",
+                "detour": "select"
+            },
+            {
+                "tag": "localdns",
+                "address": "h3://223.5.5.5/dns-query",
+                "detour": "direct"
+            },
+            {
+                "address": "rcode://refused",
+                "tag": "block"
+            },
+            {
+                "tag": "dns_fakeip",
+                "address": "fakeip"
+            }
+        ],
+        "rules": [
+            {
+                "outbound": "any",
+                "server": "localdns",
+                "disable_cache": true
+            },
+            {
+                "clash_mode": "Global",
+                "server": "proxydns"
+            },
+            {
+                "clash_mode": "Direct",
+                "server": "localdns"
+            },
+            {
+                "rule_set": "geosite-cn",
+                "server": "localdns"
+            },
+            {
+                 "rule_set": "geosite-geolocation-!cn",
+                 "server": "proxydns"
+            },
+             {
+                "rule_set": "geosite-geolocation-!cn",         
+                "query_type": [
+                    "A",
+                    "AAAA"
+                ],
+                "server": "dns_fakeip"
+            }
+          ],
+           "fakeip": {
+           "enabled": true,
+           "inet4_range": "198.18.0.0/15",
+           "inet6_range": "fc00::/18"
+         },
+          "independent_cache": true,
+          "final": "proxydns"
+        },
+      "inbounds": [
+    {
+      "type": "tun",
+      "inet4_address": "172.19.0.1/30",
+      "inet6_address": "fd00::1/126",
+      "auto_route": true,
+      "strict_route": true,
+      "sniff": true,
+      "sniff_override_destination": true,
+      "domain_strategy": "prefer_ipv4"
+    }
+  ],
+  "outbounds": [
+    {
+      "tag": "select",
+      "type": "selector",
+      "default": "auto",
+      "outbounds": [
+        "auto",
+         "vless-instance-20240508-1439",
+        "vmess-instance-20240508-1439",
+        "hy2-instance-20240508-1439",
+        "tuic5-instance-20240508-1439",
+"vmess-tls-argo临时-instance-20240508-1439",
+"vmess-argo临时-instance-20240508-1439",
+        "vless-sk.lscqs.cloudns.biz",
+        "vless-lscqs.cloudns.biz",
+        "vmess-lscqs.cloudns.biz"
+        
+      ]
+    },
+    {
+      "type": "vless",
+      "tag": "vless-instance-20240508-1439",
+      "server": "167.234.215.139",
+      "server_port": 49674,
+      "uuid": "67fd0757-d761-4164-aa02-f574a9747087",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.yahoo.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+      "reality": {
+          "enabled": true,
+          "public_key": "dmE9n5Q70wCzipO-dpbSukBPbQAGxFTE89oD-wbzBGM",
+          "short_id": "2e645316"
+        }
+      }
+    },
+{
+            "server": "167.234.215.139",
+            "server_port": 20624,
+            "tag": "vmess-instance-20240508-1439",
+            "tls": {
+                "enabled": false,
+                "server_name": "www.bing.com",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "www.bing.com"
+                    ]
+                },
+                "path": "67fd0757-d761-4164-aa02-f574a9747087-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "67fd0757-d761-4164-aa02-f574a9747087"
+        },
+
+    {
+        "type": "hysteria2",
+        "tag": "hy2-instance-20240508-1439",
+        "server": "167.234.215.139",
+        "server_port": 50429,
+        "password": "67fd0757-d761-4164-aa02-f574a9747087",
+        "tls": {
+            "enabled": true,
+            "server_name": "www.bing.com",
+            "insecure": true,
+            "alpn": [
+                "h3"
+            ]
+        }
+    },
+        {
+            "type":"tuic",
+            "tag": "tuic5-instance-20240508-1439",
+            "server": "167.234.215.139",
+            "server_port": 27911,
+            "uuid": "67fd0757-d761-4164-aa02-f574a9747087",
+            "password": "67fd0757-d761-4164-aa02-f574a9747087",
+            "congestion_control": "bbr",
+            "udp_relay_mode": "native",
+            "udp_over_stream": false,
+            "zero_rtt_handshake": false,
+            "heartbeat": "10s",
+            "tls":{
+                "enabled": true,
+                "server_name": "www.bing.com",
+                "insecure": true,
+                "alpn": [
+                    "h3"
+                ]
+            }
+        },
+{
+            "server": "www.visa.com.sg",
+            "server_port": 8443,
+            "tag": "vmess-tls-argo临时-instance-20240508-1439",
+            "tls": {
+                "enabled": true,
+                "server_name": "reid-sat-aa-improvement.trycloudflare.com",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "reid-sat-aa-improvement.trycloudflare.com"
+                    ]
+                },
+                "path": "67fd0757-d761-4164-aa02-f574a9747087-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "67fd0757-d761-4164-aa02-f574a9747087"
+        },
+{
+            "server": "www.visa.com.sg",
+            "server_port": 8880,
+            "tag": "vmess-argo临时-instance-20240508-1439",
+            "tls": {
+                "enabled": false,
+                "server_name": "reid-sat-aa-improvement.trycloudflare.com",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        "reid-sat-aa-improvement.trycloudflare.com"
+                    ]
+                },
+                "path": "67fd0757-d761-4164-aa02-f574a9747087-vm",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "67fd0757-d761-4164-aa02-f574a9747087"
+        },
+
+    {
+      "type": "vless",
+      "tag": "vless-sk.lscqs.cloudns.biz",
+      "server": "sk.lscqs.cloudns.biz",
+      "server_port": 443,
+      "uuid": "88eb0409-800f-440d-aa1d-4a998f651a14",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "aws.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+      "reality": {
+          "enabled": true,
+          "public_key": "qhTzYYIgBzDLNYR79oxftqdo1kzL-1_hGJKfqrOliCY",
+          "short_id": ""
+        }
+      }
+    },
+
+{
+      "type": "vless",
+      "tag": "vless-lscqs.cloudns.biz",
+      "server": "xyz.lscqs.cloudns.biz",
+      "server_port": 19120,
+      "uuid": "4ee4e9f6-ecec-49ac-dc0b-b64a935df165",
+      "packet_encoding": "xudp",
+      "flow": "xtls-rprx-vision",
+      "tls": {
+        "enabled": true,
+        "server_name": "www.amazon.com",
+        "utls": {
+          "enabled": true,
+          "fingerprint": "chrome"
+        },
+      "reality": {
+          "enabled": true,
+          "public_key": "cDaDzPr3PlS3NM8lreHZbdo-Mhqz8vMBzMSkHXhGIUA",
+          "short_id": ""
+        }
+      }
+    },
+
+    {
+            "server": "xyz.lscqs.cloudns.biz",
+            "server_port": 443,
+            "tag": "vmess-lscqs.cloudns.biz",
+            "tls": {
+                "enabled": false,
+                "server_name": "",
+                "insecure": false,
+                "utls": {
+                    "enabled": true,
+                    "fingerprint": "chrome"
+                }
+            },
+            "packet_encoding": "packetaddr",
+            "transport": {
+                "headers": {
+                    "Host": [
+                        
+                    ]
+                },
+                "path": "",
+                "type": "ws"
+            },
+            "type": "vmess",
+            "security": "auto",
+            "uuid": "4fb038f1-48ff-41f8-9917-3bc0096b908b"
+    },
+
+   
+
+    {
+      "tag": "direct",
+      "type": "direct"
+    },
+    {
+      "tag": "block",
+      "type": "block"
+    },
+    {
+      "tag": "dns-out",
+      "type": "dns"
+    },
+    {
+      "tag": "auto",
+      "type": "urltest",
+      "outbounds": [
+         "vless-instance-20240508-1439",
+        "vmess-instance-20240508-1439",
+        "hy2-instance-20240508-1439",
+        "tuic5-instance-20240508-1439",
+"vmess-tls-argo临时-instance-20240508-1439",
+"vmess-argo临时-instance-20240508-1439",
+        "vless-sk.lscqs.cloudns.biz",
+        "vless-lscqs.cloudns.biz",
+        "vmess-lscqs.cloudns.biz"
+        
+      ],
+      "url": "https://www.gstatic.com/generate_204",
+      "interval": "1m",
+      "tolerance": 50,
+      "interrupt_exist_connections": false
+    }
+  ],
+  "route": {
+      "rule_set": [
+            {
+                "tag": "geosite-geolocation-!cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-!cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            },
+            {
+                "tag": "geosite-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geosite/geolocation-cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            },
+            {
+                "tag": "geoip-cn",
+                "type": "remote",
+                "format": "binary",
+                "url": "https://cdn.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@sing/geo/geoip/cn.srs",
+                "download_detour": "select",
+                "update_interval": "1d"
+            }
+        ],
+    "auto_detect_interface": true,
+    "final": "select",
+    "rules": [
+      {
+        "outbound": "dns-out",
+        "protocol": "dns"
+      },
+      {
+        "clash_mode": "Direct",
+        "outbound": "direct"
+      },
+      {
+        "clash_mode": "Global",
+        "outbound": "select"
+      },
+      {
+        "rule_set": "geoip-cn",
+        "outbound": "direct"
+      },
+      {
+        "rule_set": "geosite-cn",
+        "outbound": "direct"
+      },
+      {
+      "ip_is_private": true,
+      "outbound": "direct"
+      },
+      {
+        "rule_set": "geosite-geolocation-!cn",
+        "outbound": "select"
+      }
+    ]
+  },
+    "ntp": {
+    "enabled": true,
+    "server": "time.apple.com",
+    "server_port": 123,
+    "interval": "30m",
+    "detour": "direct"
+  }
+}
+
